@@ -43,8 +43,8 @@ private:
 
 	const word ADDRESS_TIME_HI;
 	const word ADDRESS_TIME_LO;
-	const word ADDRESS_TEMPERAUTRE_HI;
-	const word ADDRESS_TEMPERAUTRE_LO;
+	const word ADDRESS_TEMPERATURE_HI;
+	const word ADDRESS_TEMPERATURE_LO;
 	const word ADDRESS_MEASURE_TIME_HI;
 	const word ADDRESS_MEASURE_TIME_LO;
 	const word ADDRESS_SETPOINT_HI;

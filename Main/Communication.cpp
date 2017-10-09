@@ -1,6 +1,6 @@
 #include "Communication.h"
 
-const int DEFAULT_ADDRESS = 1;
+const int DEVICE_ADDRESS = 1;
 const word INPUT_OFFSET = 0;
 
 union floatToWords
@@ -17,8 +17,8 @@ Communication::Communication() :
 	// input registers
 	ADDRESS_TIME_HI(0),
 	ADDRESS_TIME_LO(1),
-	ADDRESS_TEMPERAUTRE_HI(2),
-	ADDRESS_TEMPERAUTRE_LO(3),
+	ADDRESS_TEMPERATURE_HI(2),
+	ADDRESS_TEMPERATURE_LO(3),
 	ADDRESS_MEASURE_TIME_HI(4),
 	ADDRESS_MEASURE_TIME_LO(5),
 	ADDRESS_SETPOINT_HI(6),
@@ -50,7 +50,7 @@ Communication::Communication() :
 void Communication::Setup(Serial_ &serial, uint32_t serialBps)
 {
 	modbus.config(&serial, serialBps, SERIAL_8N1);
-	modbus.setSlaveId(DEFAULT_ADDRESS);
+	modbus.setSlaveId(DEVICE_ADDRESS);
 	SetupSlaveInputStorage();
 	SetupSlaveOutputStorage();
 }
@@ -74,8 +74,8 @@ void Communication::SetTime(uint32_t value)
 void Communication::SetTemperature(float value)
 {
 	floatToWords.f = value;
-	modbus.Ireg(ADDRESS_TEMPERAUTRE_HI, floatToWords.w[0]);
-	modbus.Ireg(ADDRESS_TEMPERAUTRE_LO, floatToWords.w[1]);
+	modbus.Ireg(ADDRESS_TEMPERATURE_HI, floatToWords.w[1]);
+	modbus.Ireg(ADDRESS_TEMPERATURE_LO, floatToWords.w[0]);
 }
 
 void Communication::SetMeasureTime(uint32_t value)
@@ -87,22 +87,22 @@ void Communication::SetMeasureTime(uint32_t value)
 void Communication::SetSetpoint(float value)
 {
 	floatToWords.f = value;
-	modbus.Ireg(ADDRESS_SETPOINT_HI, floatToWords.w[0]);
-	modbus.Ireg(ADDRESS_SETPOINT_LO, floatToWords.w[1]);
+	modbus.Ireg(ADDRESS_SETPOINT_HI, floatToWords.w[1]);
+	modbus.Ireg(ADDRESS_SETPOINT_LO, floatToWords.w[0]);
 }
 
 void Communication::SetInputOn(float value)
 {
 	floatToWords.f = value;
-	modbus.Ireg(ADDRESS_INPUTON_HI, floatToWords.w[0]);
-	modbus.Ireg(ADDRESS_INPUTON_LO, floatToWords.w[1]);
+	modbus.Ireg(ADDRESS_INPUTON_HI, floatToWords.w[1]);
+	modbus.Ireg(ADDRESS_INPUTON_LO, floatToWords.w[0]);
 }
 
 void Communication::SetInputOff(float value)
 {
 	floatToWords.f = value;
-	modbus.Ireg(ADDRESS_INPUTOFF_HI, floatToWords.w[0]);
-	modbus.Ireg(ADDRESS_INPUTOFF_LO, floatToWords.w[1]);
+	modbus.Ireg(ADDRESS_INPUTOFF_HI, floatToWords.w[1]);
+	modbus.Ireg(ADDRESS_INPUTOFF_LO, floatToWords.w[0]);
 }
 
 void Communication::SetResolution(short value)
@@ -176,13 +176,13 @@ void Communication::SetupSlaveInputStorage()
 	modbus.addCoil(ADDRESS_NEW_INPUTOFF);
 	modbus.addCoil(ADDRESS_NEW_RESOLUTION);
 
-	modbus.addHreg(ADDRESS_SETPOINT_HI);
-	modbus.addHreg(ADDRESS_SETPOINT_LO);
-	modbus.addHreg(ADDRESS_INPUTON_HI);
-	modbus.addHreg(ADDRESS_INPUTON_LO);
-	modbus.addHreg(ADDRESS_INPUTOFF_HI);
-	modbus.addHreg(ADDRESS_INPUTOFF_LO);
-	modbus.addHreg(ADDRESS_RESOLUTION);
+	modbus.addHreg(ADDRESS_NEW_SETPOINT_VALUE_HI);
+	modbus.addHreg(ADDRESS_NEW_SETPOINT_VALUE_LO);
+	modbus.addHreg(ADDRESS_NEW_INPUTON_VALUE_HI);
+	modbus.addHreg(ADDRESS_NEW_INPUTON_VALUE_LO);
+	modbus.addHreg(ADDRESS_NEW_INPUTOFF_VALUE_HI);
+	modbus.addHreg(ADDRESS_NEW_INPUTOFF_VALUE_LO);
+	modbus.addHreg(ADDRESS_NEW_RESOLUTION_VALUE);
 }
 
 void Communication::SetupSlaveOutputStorage()
@@ -191,8 +191,8 @@ void Communication::SetupSlaveOutputStorage()
 	
 	modbus.addIreg(ADDRESS_TIME_HI);
 	modbus.addIreg(ADDRESS_TIME_LO);
-	modbus.addIreg(ADDRESS_TEMPERAUTRE_HI);
-	modbus.addIreg(ADDRESS_TEMPERAUTRE_LO);
+	modbus.addIreg(ADDRESS_TEMPERATURE_HI);
+	modbus.addIreg(ADDRESS_TEMPERATURE_LO);
 	modbus.addIreg(ADDRESS_MEASURE_TIME_HI);
 	modbus.addIreg(ADDRESS_MEASURE_TIME_LO);
 	modbus.addIreg(ADDRESS_SETPOINT_HI);
