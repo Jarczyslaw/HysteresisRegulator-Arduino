@@ -114,8 +114,9 @@ float Communication::GetFloat(word addresHi, word addressLo)
 {
 	word hi = modbus.Hreg(addresHi);
 	word lo = modbus.Hreg(addressLo);
-	float result = (hi << 16) | lo;
-	return result;
+	floatToWords.w[1] = hi;
+	floatToWords.w[0] = lo;
+	return floatToWords.f;
 }
 
 bool Communication::CheckNewFlag(word flagAddress)
