@@ -18,34 +18,37 @@ class UserPrefs
         Thermometer::Resolution GetThermometerResolution(Thermometer::Resolution);
         void Clear();
 
-        template <class T> void Set(int flagAddress, int valueAddress, T value)
-        {
-            EEPROM.updateBit(flagAddress, 0, true);
-            EEPROM.updateBlock<T>(valueAddress, value);
-        }
-
-        template <class T> T Get(int flagAddress, int valueAddress, T defaultValue)
-        {
-            if (EEPROM.readBit(flagAddress, 0))
-            {
-                T value;
-                EEPROM.readBlock<T>(valueAddress, value);
-                return value;
-            }
-            else
-                return defaultValue;
-        }
+        
     protected:
     private:
         enum
         {
             ADDRESS_FLAG_SET_POINT =        0,
             ADDRESS_SET_POINT =             1,
-            ADDRESS_FLAG_RELAY_INPUT_ON =   3,
-            ADDRESS_RELAY_INPUT_ON =        4,
-            ADDRESS_FLAG_RELAY_INPUT_OFF =  6,
-            ADDRESS_RELAY_INPUT_OFF =       7,
-            ADDRESS_FLAG_THERM_RESOLUTION = 9,
-            ADDRESS_THERM_RESOLUTION =      10
+            ADDRESS_FLAG_RELAY_INPUT_ON =   5,
+            ADDRESS_RELAY_INPUT_ON =        6,
+            ADDRESS_FLAG_RELAY_INPUT_OFF =  10,
+            ADDRESS_RELAY_INPUT_OFF =       11,
+            ADDRESS_FLAG_THERM_RESOLUTION = 15,
+            ADDRESS_THERM_RESOLUTION =      16
         };
+		int totalBytesUsed = 20;
+
+		template <class T> void Set(int flagAddress, int valueAddress, T value)
+		{
+			EEPROM.updateByte(flagAddress, true);
+			EEPROM.updateBlock<T>(valueAddress, value);
+		}
+
+		template <class T> T Get(int flagAddress, int valueAddress, T defaultValue)
+		{
+			if (EEPROM.readByte(flagAddress))
+			{
+				T value;
+				EEPROM.readBlock<T>(valueAddress, value);
+				return value;
+			}
+			else
+				return defaultValue;
+		}
 };

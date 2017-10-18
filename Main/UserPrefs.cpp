@@ -46,6 +46,6 @@ Thermometer::Resolution UserPrefs::GetThermometerResolution(Thermometer::Resolut
 
 void UserPrefs::Clear()
 {
-    for(int i = 0;i < 12;i++)
+    for(int i = 0;i < totalBytesUsed;i++)
         EEPROM.writeByte(i, 0);
 }

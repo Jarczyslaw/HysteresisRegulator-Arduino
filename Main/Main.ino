@@ -74,26 +74,34 @@ void control()
 
 void sendDebug()
 {
+#ifdef __AVR_ATmega32U4__
 	if (!SERIAL_DEBUG_ENABLED)
 		return;
 
 	if (debugTick.Tock() > SERIAL_DEBUG_INTERVAL)
 	{
-		Serial1.print("Time: ");
+		Serial1.print("Relay:");
+		Serial1.print(controlOutput.Get());
+		Serial1.print(" Time:");
 		Serial1.print(millis());
-		Serial1.print(" SetPoint:");
-		Serial1.print(setPoint);
 		Serial1.print(" Temp:");
 		Serial1.print(thermometer.GetLastTemperature());
-		Serial1.print(" Output:");
-		Serial1.print(controlOutput.Get());
-		Serial1.print(" TTime:");
+		Serial1.print(" MeasureTime:");
 		Serial1.print(thermometer.GetLastMeasureTime());
+		Serial1.print(" Resolution:");
+		Serial1.print(thermometer.GetResolution());
+		Serial1.print(" SetPoint:");
+		Serial1.print(setPoint);
+		Serial1.print(" InputOn:");
+		Serial1.print(relay.GetInputOn());
+		Serial1.print(" InputOff:");
+		Serial1.print(relay.GetInputOff());
 		Serial1.println();
 
 		debugLed.Toggle();
 		debugTick.Tick();
 	}
+#endif
 }
 
 void communication()
@@ -150,7 +158,9 @@ void setup()
 
 	// setup serial communication
 	comm.Setup(Serial, SERIAL_BPS);
+#ifdef __AVR_ATmega32U4__
 	Serial1.begin(SERIAL_BPS);
+#endif
 
 	// update modbus registers
 	comm.SetSetpoint(setPoint);

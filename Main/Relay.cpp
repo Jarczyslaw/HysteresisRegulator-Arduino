@@ -33,15 +33,15 @@ void Relay::SetOutputOff(int outputOff)
 
 void Relay::SetInputOn(float inputOn)
 {
-	if (inputOn < this->inputOff)
-		inputOn = this->inputOff;
+	if (inputOn < 0.0f)
+		inputOn = 0.0f;
 	this->inputOn = inputOn;
 }
 
 void Relay::SetInputOff(float inputOff)
 {
-	if (inputOff > this->inputOn)
-		inputOff = this->inputOn;
+	if (inputOff > 0.0f)
+		inputOff = 0.0f;
 	this->inputOff = inputOff;
 }
 

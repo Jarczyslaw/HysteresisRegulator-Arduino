@@ -47,9 +47,22 @@ Communication::Communication() :
 {
 }
 
+void Communication::Setup(HardwareSerial &serial, uint32_t serialBps)
+{
+	modbus.config(&serial, serialBps, SERIAL_8N1);
+	CommunicationSetup();
+}
+
+#ifdef __AVR_ATmega32U4__
 void Communication::Setup(Serial_ &serial, uint32_t serialBps)
 {
 	modbus.config(&serial, serialBps, SERIAL_8N1);
+	CommunicationSetup();
+}
+#endif
+
+void Communication::CommunicationSetup()
+{
 	modbus.setSlaveId(DEVICE_ADDRESS);
 	SetupSlaveInputStorage();
 	SetupSlaveOutputStorage();

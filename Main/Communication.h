@@ -9,7 +9,10 @@ class Communication
 public:
 	Communication();
 
+	void Setup(HardwareSerial&, uint32_t);
+#ifdef __AVR_ATmega32U4__
 	void Setup(Serial_&, uint32_t);
+#endif
 	void Update();
 
 	void SetOutputState(uint8_t);
@@ -30,6 +33,7 @@ public:
 	float GetNewInputOff();
 	word GetNewResolution();
 private:
+	void CommunicationSetup();
 	void SetupSlaveInputStorage();
 	void SetupSlaveOutputStorage();
 
