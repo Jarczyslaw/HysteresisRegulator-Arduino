@@ -9,10 +9,10 @@ class Thermometer
     public:
         enum Resolution
         {
-            RESOLUTION0_5 =		9,
-            RESOLUTION0_25 =	10,
-            RESOLUTION0_125 =	11,
-            RESOLUTION0_0625 =	12
+            RESOLUTION9Bits =		9,
+            RESOLUTION10Bits =		10,
+            RESOLUTION11Bits =		11,
+            RESOLUTION12Bits =		12
         };
         Thermometer(int);
         void Begin(Thermometer::Resolution);
@@ -22,8 +22,9 @@ class Thermometer
         float ReadTemperature();
         float GetLastTemperature();
         uint32_t GetLastMeasureTime();
-        void SetResolution(Thermometer::Resolution);
-		void SetResolution(word);
+        void RequestNewResolution(Thermometer::Resolution);
+		void RequestNewResolution(word);
+		bool ApplyNewResolution();
         Thermometer::Resolution GetResolution();
     protected:
     private:
@@ -38,4 +39,6 @@ class Thermometer
         float lastTemperature;
         uint32_t lastMeasureTime;
 		const float INVALID_TEMPERATURE;
+		bool newResolutionRequest;
+		Thermometer::Resolution newResolutionValue;
 };

@@ -54,6 +54,14 @@ void control()
 	if (!thermometer.TemperatureReady())
 		return;
 
+	// if resolution change is pending, change it now and update all values
+	if (thermometer.ApplyNewResolution())
+	{
+		Thermometer::Resolution resolution = thermometer.GetResolution();
+		userPrefs.SetResolution(resolution);
+		comm.SetResolution(resolution);
+	}
+
 	float temperature = thermometer.ReadTemperature();
 	uint32_t measureTime = thermometer.GetLastMeasureTime();
 
@@ -136,12 +144,7 @@ void communication()
 	}
 
 	if (comm.CheckNewResolution())
-	{
-		thermometer.SetResolution(comm.GetNewResolution());
-		Thermometer::Resolution resolution = thermometer.GetResolution();
-		userPrefs.SetResolution(resolution);
-		comm.SetResolution(resolution);
-	}
+		thermometer.RequestNewResolution(comm.GetNewResolution());
 }
 
 void setup()
@@ -154,7 +157,7 @@ void setup()
 	setPoint = userPrefs.GetSetPoint(30);
 	float inputOn = userPrefs.GetRelayInputOn(2);
 	float inputOff = userPrefs.GetRelayInputOff(-2);
-	Thermometer::Resolution resolution = userPrefs.GetThermometerResolution(Thermometer::RESOLUTION0_0625);
+	Thermometer::Resolution resolution = userPrefs.GetThermometerResolution(Thermometer::RESOLUTION12Bits);
 
 	// setup serial communication
 	comm.Setup(Serial, SERIAL_BPS);

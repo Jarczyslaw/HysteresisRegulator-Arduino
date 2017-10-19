@@ -13,7 +13,8 @@ void Thermometer::Begin(Thermometer::Resolution resolution)
 {
     sensor->begin();
     connected = sensor->getAddress(address, 0);
-    SetResolution(resolution);
+    RequestNewResolution(resolution);
+	ApplyNewResolution();
 }
 
 void Thermometer::RequestTemperature()
@@ -75,20 +76,32 @@ bool Thermometer::IsConnected()
     return connected;
 }
 
-void Thermometer::SetResolution(Thermometer::Resolution resolution)
+void Thermometer::RequestNewResolution(Thermometer::Resolution resolution)
 {
-	this->resolution = resolution;
-    sensor->setResolution((uint8_t*)address, resolution, true);
+	newResolutionRequest = true;
+	newResolutionValue = resolution;
 }
 
-void Thermometer::SetResolution(word value)
+void Thermometer::RequestNewResolution(word value)
 {
-	if (value < Thermometer::RESOLUTION0_5)
-		value = Thermometer::RESOLUTION0_5;
-	else if (value > Thermometer::RESOLUTION0_0625)
-		value = Thermometer::RESOLUTION0_0625;
-	Thermometer::Resolution resolution = static_cast<Thermometer::Resolution>(value);
-	SetResolution(resolution);
+	if (value < Thermometer::RESOLUTION9Bits)
+		value = Thermometer::RESOLUTION9Bits;
+	else if (value > Thermometer::RESOLUTION12Bits)
+		value = Thermometer::RESOLUTION12Bits;
+	RequestNewResolution(static_cast<Thermometer::Resolution>(value));
+}
+
+bool Thermometer::ApplyNewResolution()
+{
+	if (newResolutionRequest)
+	{
+		sensor->setResolution((uint8_t*)address, newResolutionValue, true);
+		this->resolution = newResolutionValue;
+		newResolutionRequest = false;
+		return true;
+	}
+	else
+		return false;
 }
 
 Thermometer::Resolution Thermometer::GetResolution()
